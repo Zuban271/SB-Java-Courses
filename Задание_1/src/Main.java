@@ -1,5 +1,5 @@
 import javax.xml.transform.Source;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.HashMap;
 
 // Проект Зубань Алексея, Задание № 1
@@ -11,12 +11,16 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Это мой проект JAVA - Задание №1 ");
         String[] Auto = {"C100_1-100", "C200_1-120-1200", "C300_1-120-30", "C400_1-80-20", "C100_2-50", "C200_2-40-1000", "C300_2-200-45", "C400_2-10-20", "C100_3-10", "C200_3-170-1100", "C300_3-150-29", "C400_3-100-28", "C100_1-300", "C200_1-100-750", "C300_1-32-15"};
+     RunGSM(Auto);
+    }
+// Главный метод по запуску всего проекта
+    public static void RunGSM(String[] auto){
         float AllConsumption = 0;
         float MaxCarConsumtion = 0;
         float MinCarConsumtion = 0;
         String MaxCarCode = "";
         String MinCarCode = "";
-        for (String a : Auto) {
+        for (String a : auto) {
             String[] CarCode1 = a.split("C");
             String[] CarCode2 = CarCode1[1].split("_");
             String[] CarCode3 = CarCode2[1].split("-");
@@ -26,7 +30,7 @@ public class Main {
             float FuelRate = whatFuelRate(CarCode2[0]);
             // Расчет расходов на каждый класс авто
             CarConsumtion = Float.parseFloat(CarCode3[1]) / 100 * FuelRate * FuelCost;
-            if (a.equals(Auto[0]))
+            if (a.equals(auto[0]))
                 MinCarConsumtion = CarConsumtion;
 
             if (MaxCarConsumtion < CarConsumtion) {
@@ -49,22 +53,22 @@ public class Main {
         System.out.printf("тип авто имеющий наименьшую стоимость расходов - " + MinCarCode + " = %f\n", MinCarConsumtion);
         System.out.println("");
 // Получение номеров и пробега легковых машин
-        Numbers = NumberAuto("100",Auto);
-        Miles = MileAge("100",Auto);
+        Numbers = NumberAuto("100",auto);
+        Miles = MileAge("100",auto);
         SortMileAge();
         int i = 0;
         for (int n:Numbers) {
-           if (n != 0) {
-               System.out.printf("Номер Легковой машины = %d\n", n);
-               System.out.printf("Пробег Легковой машины = %d\n", Miles[i]);
-               System.out.println("");
-               i++;
-           }
-           }
+            if (n != 0) {
+                System.out.printf("Номер Легковой машины = %d\n", n);
+                System.out.printf("Пробег Легковой машины = %d\n", Miles[i]);
+                System.out.println("");
+                i++;
+            }
+        }
 // Получение номеров и пробега грузовых машин
-        Numbers = NumberAuto("200",Auto);
-        Miles = MileAge("200",Auto);
-        Parameter = DopParameter("200",Auto);
+        Numbers = NumberAuto("200",auto);
+        Miles = MileAge("200",auto);
+        Parameter = DopParameter("200",auto);
         SortMileAgeDopParameter();
         i = 0;
         for (int n:Numbers) {
@@ -77,9 +81,9 @@ public class Main {
             }
         }
         // Получение номеров и пробега пассажирского транспорта
-        Numbers = NumberAuto("300",Auto);
-        Miles = MileAge("300",Auto);
-        Parameter = DopParameter("300",Auto);
+        Numbers = NumberAuto("300",auto);
+        Miles = MileAge("300",auto);
+        Parameter = DopParameter("300",auto);
         SortMileAgeDopParameter();
         i = 0;
         for (int n:Numbers) {
@@ -92,9 +96,9 @@ public class Main {
             }
         }
         // Получение номеров и пробега тяжелой техники
-        Numbers = NumberAuto("400",Auto);
-        Miles = MileAge("400",Auto);
-        Parameter = DopParameter("400",Auto);
+        Numbers = NumberAuto("400",auto);
+        Miles = MileAge("400",auto);
+        Parameter = DopParameter("400",auto);
         SortMileAgeDopParameter();
         i = 0;
         for (int n:Numbers) {
@@ -107,6 +111,9 @@ public class Main {
             }
         }
     }
+
+
+
 // Сортировка по пробегу
     public static void SortMileAge() {
         for(int out =Miles.length - 1;out >=1; out--){
@@ -262,7 +269,7 @@ public class Main {
         return resizeNum;
 
     }
-}
 
+}
 
 
