@@ -1,5 +1,6 @@
 import javax.xml.transform.Source;
 //import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 // Проект Зубань Алексея, Задание № 1
@@ -10,8 +11,26 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Это мой проект JAVA - Задание №1 ");
+//Задача 1
         String[] Auto = {"C100_1-100", "C200_1-120-1200", "C300_1-120-30", "C400_1-80-20", "C100_2-50", "C200_2-40-1000", "C300_2-200-45", "C400_2-10-20", "C100_3-10", "C200_3-170-1100", "C300_3-150-29", "C400_3-100-28", "C100_1-300", "C200_1-100-750", "C300_1-32-15"};
      RunGSM(Auto);
+//Задача 2
+     Integer[] myArray = {10,20,30,40,13,24,56,22,12,44,55,34,78,45,676,89,11,23,43,50,39,19,678,15,41};
+     MyClass NewClass = new MyClass(myArray);
+      NewClass.setNumbersEnd(888);
+      NewClass.setNumbersPos(777,10);
+      NewClass.printArray();
+      NewClass.delNumbersPos(10);
+      System.out.println();
+      NewClass.printArray();
+      System.out.println();
+      NewClass.changeNumbersPos(999,NewClass.ArrayLength() - 1);
+      NewClass.printArray();
+      System.out.println();
+      ArrayList<Integer> myNewArray = NewClass.sortNumbersIncrease();
+        for (Integer n:myNewArray)
+            System.out.printf("Элемент нового массива = %d\n",n.intValue());
+
     }
 // Главный метод по запуску всего проекта
     public static void RunGSM(String[] auto){

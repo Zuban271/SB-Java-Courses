@@ -1,16 +1,18 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.reverseOrder;
 
 public  class MyClass{
-    private ArrayList <Integer> Numbers;
+    private ArrayList <Integer> Numbers = new ArrayList<>();
 
     public MyClass() {
 
     }
 
-    public MyClass(ArrayList<Integer> numbers) {
-    this.Numbers = numbers;
+    public MyClass(Integer[] numbers) {
+        this.Numbers.addAll(Arrays.asList(numbers));
     }
 
     public void setNumbersEnd(int num) {
@@ -43,8 +45,42 @@ public  class MyClass{
         }
     }
 
-    public void sortNumbers(){
-        this.Numbers.sort(naturalOrder());
+    public ArrayList sortNumbersIncrease(){
+        ArrayList <Integer> temp = new ArrayList<Integer>();
+        temp.addAll(Numbers);
+        temp.sort(naturalOrder());
+        return temp;
     }
 
+    public ArrayList sortNumbersDecrease(){
+        ArrayList <Integer> temp = new ArrayList<Integer>();
+        temp.addAll(Numbers);
+        temp.sort(reverseOrder());
+        return temp;
+    }
+
+    public int maxORminNumber(boolean maxORmin){
+       int max = this.Numbers.get(0);
+       int min = this.Numbers.get(0);
+       if (maxORmin){
+           for (Integer n:this.Numbers) {
+               if (n > max)
+                   max = n;
+           }
+           return max;
+       }
+       else {
+           for (Integer n:this.Numbers) {
+               if (n < min)
+                   min = n;
+           }
+           return min;
+       }
+    }
+
+    public void setEqualElement(int element){
+        for (int i=0; i< this.Numbers.size();i++) {
+          this.Numbers.set(i,element);
+        }
+    }
 }
