@@ -8,6 +8,11 @@ public class Main {
     public static int[] Numbers;
     public static int[] Miles;
     public static int[] Parameter;
+    public static float AllConsumption = 0;
+    public static float MaxCarConsumtion = 0;
+    public static float MinCarConsumtion = 0;
+    public static String MaxCarCode = "";
+    public static String MinCarCode = "";
 
     public static void main(String[] args) {
         System.out.println("Это мой проект JAVA - Задание №1 ");
@@ -16,7 +21,7 @@ public class Main {
      RunGSM(Auto);
 //Задача 2
      Integer[] myArray = {10,20,30,40,13,24,56,22,12,44,55,34,78,45,676,89,11,23,43,50,39,19,678,15,41};
-     MyClass NewClass = new MyClass(myArray);
+      MyClass NewClass = new MyClass(myArray);
       NewClass.setNumbersEnd(888);
       NewClass.setNumbersPos(777,10);
       NewClass.printArray();
@@ -31,24 +36,118 @@ public class Main {
         for (Integer n:myNewArray)
             System.out.printf("Элемент нового массива = %d\n",n.intValue());
 
+        System.out.println();
+        myNewArray = NewClass.sortNumbersDecrease();
+        for (Integer n:myNewArray)
+            System.out.printf("Элемент нового массива = %d\n",n.intValue());
+
+        System.out.println();
+        int max = NewClass.maxORminNumber(true);
+        System.out.printf("Максимальный элемент массива = %d\n",max);
+
+        System.out.println();
+        int min = NewClass.maxORminNumber(false);
+        System.out.printf("Минимальный элемент массива = %d\n",min);
+
+        System.out.println();
+        NewClass.setEqualElement(7777);
+        NewClass.printArray();
     }
 // Главный метод по запуску всего проекта
     public static void RunGSM(String[] auto){
-        float AllConsumption = 0;
-        float MaxCarConsumtion = 0;
-        float MinCarConsumtion = 0;
-        String MaxCarCode = "";
-        String MinCarCode = "";
+// Расчет общих расходов, мин. максм. и на каждый класс авто
+        AllMinMaxConsumption(auto);
+        System.out.println("");
+        System.out.printf("Общая стоимость расходов на ГСМ = %f\n", AllConsumption);
+        System.out.println("");
+        System.out.printf("тип авто имеющий наибольшую стоимость расходов - " + MaxCarCode + " = %f\n", MaxCarConsumtion);
+        System.out.printf("тип авто имеющий наименьшую стоимость расходов - " + MinCarCode + " = %f\n", MinCarConsumtion);
+        System.out.println("");
+// Получение номеров и пробега легковых машин
+        NumRunCar(auto);
+// Получение номеров и пробега грузовых машин
+        NumRunTruck(auto);
+// Получение номеров и пробега пассажирского транспорта
+        NumRunPassenger(auto);
+// Получение номеров и пробега тяжелой техники
+        NumRunHeavy(auto);
+    }
+
+    public static void NumRunCar(String[] auto){
+        Numbers = NumberAuto("100",auto);
+        Miles = MileAge("100",auto);
+        SortMileAge();
+        int i = 0;
+        for (int n:Numbers) {
+            if (n != 0) {
+                System.out.printf("Номер Легковой машины = %d\n", n);
+                System.out.printf("Пробег Легковой машины = %d\n", Miles[i]);
+                System.out.println("");
+                i++;
+            }
+        }
+    }
+    public static void NumRunTruck(String[] auto){
+        Numbers = NumberAuto("200",auto);
+        Miles = MileAge("200",auto);
+        Parameter = DopParameter("200",auto);
+        SortMileAgeDopParameter();
+        int i = 0;
+        for (int n:Numbers) {
+            if (n != 0) {
+                System.out.printf("Номер Грузовой машины = %d\n", n);
+                System.out.printf("Пробег Грузовой машины = %d\n", Miles[i]);
+                System.out.printf("объем перевезенного груза Грузовой машины = %d\n", Parameter[i]);
+                System.out.println("");
+                i++;
+            }
+        }
+    }
+    public static void NumRunPassenger(String[] auto){
+        Numbers = NumberAuto("300",auto);
+        Miles = MileAge("300",auto);
+        Parameter = DopParameter("300",auto);
+        SortMileAgeDopParameter();
+        int i = 0;
+        for (int n:Numbers) {
+            if (n != 0) {
+                System.out.printf("Номер пассажирского транспорта  = %d\n", n);
+                System.out.printf("Пробег пассажирский транспорта  = %d\n", Miles[i]);
+                System.out.printf("число перевезенных пассажиров пассажирским транспортом = %d\n", Parameter[i]);
+                System.out.println("");
+                i++;
+            }
+        }
+    }
+    public static void NumRunHeavy(String[] auto){
+        Numbers = NumberAuto("400",auto);
+        Miles = MileAge("400",auto);
+        Parameter = DopParameter("400",auto);
+        SortMileAgeDopParameter();
+        int i = 0;
+        for (int n:Numbers) {
+            if (n != 0) {
+                System.out.printf("Номер тяжелой техники  = %d\n", n);
+                System.out.printf("Пробег тяжелой техники  = %d\n", Miles[i]);
+                System.out.printf("вес поднятых грузов тяжелой техникой  = %d\n", Parameter[i]);
+                System.out.println("");
+                i++;
+            }
+        }
+    }
+    public static void AllMinMaxConsumption(String[] auto){
         for (String a : auto) {
-            String[] CarCode1 = a.split("C");
-            String[] CarCode2 = CarCode1[1].split("_");
-            String[] CarCode3 = CarCode2[1].split("-");
+            String[] CarCode = a.split("C")[1].split("_");
+
+            //String[] CarCode1 = a.split("C");
+            //String[] CarCode2 = CarCode1[1].split("_");
+            //String[] CarCode3 = CarCode2[1].split("-");
             float CarConsumtion = 0;
-            String ClassAuto = TypeAuto(CarCode2[0]);
-            float FuelCost = whatFuelCost(CarCode2[0]);
-            float FuelRate = whatFuelRate(CarCode2[0]);
+            String ClassAuto = TypeAuto(CarCode[0]);
+            float FuelCost = whatFuelCost(CarCode[0]);
+            float FuelRate = whatFuelRate(CarCode[0]);
             // Расчет расходов на каждый класс авто
-            CarConsumtion = Float.parseFloat(CarCode3[1]) / 100 * FuelRate * FuelCost;
+            CarConsumtion = Float.parseFloat(CarCode[1].split("-")[1]) / 100 * FuelRate * FuelCost;
             if (a.equals(auto[0]))
                 MinCarConsumtion = CarConsumtion;
 
@@ -65,73 +164,7 @@ public class Main {
             AllConsumption += CarConsumtion;
             System.out.printf("Расходы на класс авто: " + ClassAuto + " = %f\n", CarConsumtion);
         }
-        System.out.println("");
-        System.out.printf("Общая стоимость расходов на ГСМ = %f\n", AllConsumption);
-        System.out.println("");
-        System.out.printf("тип авто имеющий наибольшую стоимость расходов - " + MaxCarCode + " = %f\n", MaxCarConsumtion);
-        System.out.printf("тип авто имеющий наименьшую стоимость расходов - " + MinCarCode + " = %f\n", MinCarConsumtion);
-        System.out.println("");
-// Получение номеров и пробега легковых машин
-        Numbers = NumberAuto("100",auto);
-        Miles = MileAge("100",auto);
-        SortMileAge();
-        int i = 0;
-        for (int n:Numbers) {
-            if (n != 0) {
-                System.out.printf("Номер Легковой машины = %d\n", n);
-                System.out.printf("Пробег Легковой машины = %d\n", Miles[i]);
-                System.out.println("");
-                i++;
-            }
-        }
-// Получение номеров и пробега грузовых машин
-        Numbers = NumberAuto("200",auto);
-        Miles = MileAge("200",auto);
-        Parameter = DopParameter("200",auto);
-        SortMileAgeDopParameter();
-        i = 0;
-        for (int n:Numbers) {
-            if (n != 0) {
-                System.out.printf("Номер Грузовой машины = %d\n", n);
-                System.out.printf("Пробег Грузовой машины = %d\n", Miles[i]);
-                System.out.printf("объем перевезенного груза Грузовой машины = %d\n", Parameter[i]);
-                System.out.println("");
-                i++;
-            }
-        }
-        // Получение номеров и пробега пассажирского транспорта
-        Numbers = NumberAuto("300",auto);
-        Miles = MileAge("300",auto);
-        Parameter = DopParameter("300",auto);
-        SortMileAgeDopParameter();
-        i = 0;
-        for (int n:Numbers) {
-            if (n != 0) {
-                System.out.printf("Номер пассажирского транспорта  = %d\n", n);
-                System.out.printf("Пробег пассажирский транспорта  = %d\n", Miles[i]);
-                System.out.printf("число перевезенных пассажиров пассажирским транспортом = %d\n", Parameter[i]);
-                System.out.println("");
-                i++;
-            }
-        }
-        // Получение номеров и пробега тяжелой техники
-        Numbers = NumberAuto("400",auto);
-        Miles = MileAge("400",auto);
-        Parameter = DopParameter("400",auto);
-        SortMileAgeDopParameter();
-        i = 0;
-        for (int n:Numbers) {
-            if (n != 0) {
-                System.out.printf("Номер тяжелой техники  = %d\n", n);
-                System.out.printf("Пробег тяжелой техники  = %d\n", Miles[i]);
-                System.out.printf("вес поднятых грузов тяжелой техникой  = %d\n", Parameter[i]);
-                System.out.println("");
-                i++;
-            }
-        }
     }
-
-
 
 // Сортировка по пробегу
     public static void SortMileAge() {
@@ -236,12 +269,13 @@ public class Main {
         int i = 0;
         int[] Num = new int[A.length];
         for (String a : A) {
-            String[] CarCode1 = a.split("C");
-            String[] CarCode2 = CarCode1[1].split("_");
-            String[] CarCode3 = CarCode2[1].split("-");
+            String[] CarCode = a.split("C")[1].split("_");
+            //String[] CarCode1 = a.split("C");
+            //String[] CarCode2 = CarCode1[1].split("_");
+            //String[] CarCode3 = CarCode2[1].split("-");
 
-            if (CarCode2[0].equals(t)) {
-                Num[i] = Integer.parseInt(CarCode3[0]);
+            if (CarCode[0].equals(t)) {
+                Num[i] = Integer.parseInt(CarCode[1].split("-")[0]);
                 i++;
             }
         }
@@ -255,12 +289,13 @@ public class Main {
         int i = 0;
         int[] Num = new int[A.length];
         for (String a : A) {
-            String[] CarCode1 = a.split("C");
-            String[] CarCode2 = CarCode1[1].split("_");
-            String[] CarCode3 = CarCode2[1].split("-");
+            String[] CarCode = a.split("C")[1].split("_");
+            //String[] CarCode1 = a.split("C");
+            //String[] CarCode2 = CarCode1[1].split("_");
+           // String[] CarCode3 = CarCode2[1].split("-");
 
-            if (CarCode2[0].equals(t)) {
-                Num[i] = Integer.parseInt(CarCode3[1]);
+            if (CarCode[0].equals(t)) {
+                Num[i] = Integer.parseInt(CarCode[1].split("-")[1]);
                 i++;
             }
         }
@@ -274,12 +309,13 @@ public class Main {
         int i = 0;
         int[] Num = new int[A.length];
         for (String a : A) {
-            String[] CarCode1 = a.split("C");
-            String[] CarCode2 = CarCode1[1].split("_");
-            String[] CarCode3 = CarCode2[1].split("-");
+            String[] CarCode = a.split("C")[1].split("_");
+            //String[] CarCode1 = a.split("C");
+            //String[] CarCode2 = CarCode1[1].split("_");
+            //String[] CarCode3 = CarCode2[1].split("-");
 
-            if (CarCode2[0].equals(t)) {
-                Num[i] = Integer.parseInt(CarCode3[2]);
+            if (CarCode[0].equals(t)) {
+                Num[i] = Integer.parseInt(CarCode[1].split("-")[2]);
                 i++;
             }
         }
