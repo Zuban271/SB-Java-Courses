@@ -20,40 +20,63 @@ public class Main {
         String[] Auto = {"C100_1-100", "C200_1-120-1200", "C300_1-120-30", "C400_1-80-20", "C100_2-50", "C200_2-40-1000", "C300_2-200-45", "C400_2-10-20", "C100_3-10", "C200_3-170-1100", "C300_3-150-29", "C400_3-100-28", "C100_1-300", "C200_1-100-750", "C300_1-32-15"};
      RunGSM(Auto);
 //Задача 2
-     Integer[] myArray = {10,20,30,40,13,24,56,22,12,44,55,34,78,45,676,89,11,23,43,50,39,19,678,15,41};
-      MyClass NewClass = new MyClass(myArray);
-      NewClass.setNumbersEnd(888);
-      NewClass.setNumbersPos(777,10);
-      NewClass.printArray();
-      NewClass.delNumbersPos(10);
-      System.out.println();
-      NewClass.printArray();
-      System.out.println();
-      NewClass.changeNumbersPos(999,NewClass.ArrayLength() - 1);
-      NewClass.printArray();
-      System.out.println();
-      ArrayList<Integer> myNewArray = NewClass.sortNumbersIncrease();
+     Integer[] testArray = {10,20,30,40,13,24,56,22,12,44,55,34,78,45,676,89,11,23,43,50,39,19,678,15,41};
+     RunTaskTwo(testArray);
+    }
+// Метод выполения задачи 2
+    public static void RunTaskTwo(Integer[] myArray) {
+        // инициализация целочисленного массива
+        MyClass NewClass = new MyClass(myArray);
+        NewClass.printArray();
+        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
+        System.out.println();
+        // добавление элемента 888 в конец массива
+        NewClass.setNumbersEnd(888);
+        NewClass.printArray();
+        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
+        System.out.println();
+        // добавление элемента 777 в массив, на позицию 10
+        NewClass.setNumbersPos(777,10);
+        NewClass.printArray();
+        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
+        // удаление элемента массива по индексу 15
+        NewClass.delNumbersPos(15);
+        System.out.println();
+        NewClass.printArray();
+        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
+        System.out.println();
+        // изменения значения по его индексу в конце массива на значение 999
+        NewClass.changeNumbersPos(999,NewClass.ArrayLength() - 1);
+        NewClass.printArray();
+        System.out.println();
+        Integer[] myNewArray;
+        // сортировка массива по возрастанию (без изменения исходного массива)
+        myNewArray = NewClass.sortNumbersIncrease();
         for (Integer n:myNewArray)
             System.out.printf("Элемент нового массива = %d\n",n.intValue());
 
         System.out.println();
+        // сортировка массива по убыванию (без изменения исходного массива)
         myNewArray = NewClass.sortNumbersDecrease();
         for (Integer n:myNewArray)
             System.out.printf("Элемент нового массива = %d\n",n.intValue());
 
         System.out.println();
+        // вывод максимального элемента
         int max = NewClass.maxORminNumber(true);
         System.out.printf("Максимальный элемент массива = %d\n",max);
-
+        // вывод минимального элемента
         System.out.println();
         int min = NewClass.maxORminNumber(false);
         System.out.printf("Минимальный элемент массива = %d\n",min);
 
         System.out.println();
+        // заполнения массива одинаковыми элементами: 7777
         NewClass.setEqualElement(7777);
         NewClass.printArray();
     }
-// Главный метод по запуску всего проекта
+
+    // Главный метод по запуску всего проекта по задаче 1
     public static void RunGSM(String[] auto){
 // Расчет общих расходов, мин. максм. и на каждый класс авто
         AllMinMaxConsumption(auto);
