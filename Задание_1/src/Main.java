@@ -7,6 +7,7 @@ public class Main {
     public static float AllConsumption = 0;
     public static float MaxCarConsumtion = 0;
     public static float MinCarConsumtion = 0;
+    public static float CarConsumtion = 0;
     public static String MaxCarCode = "";
     public static String MinCarCode = "";
     public static Auto[] autoArray;
@@ -28,31 +29,35 @@ public class Main {
     }
     }
 
-    // Главный метод по запуску всего проекта по задаче 1
+// Главный метод по запуску всего проекта по задаче 1
     private static void RunGSMclass(String[] auto) {
-        // Создание массива Auto
+// Создание массива Auto
         autoArray = new Auto[auto.length];
-        int i = 0;
-        // Цикл по инициализации массива Auto
-        for (String a:auto) {
-            autoArray[i] = new Auto(a);
-            i++;
-        }
-        float CarConsumtion = 0;
-        float MinCarConsumtion = 0;
-        float MaxCarConsumtion = 0;
-        String MaxCarCode ="";
-        String MinCarCode ="";
-        String ClassAuto ="";
+// Инициализация массива Auto
+        initializeAuto(auto);
+
 // Сортировка массива объектов Auto
         Arrays.sort(autoArray, new Comparator<Auto>() {
             @Override
-            public int compare(Auto s, Auto t1) {
-                int ComparisonResult = s.getMileage() - t1.getMileage();
-                return 0 == ComparisonResult ? s.getDop_parameters() - t1.getDop_parameters() : ComparisonResult;
+            public int compare(Auto t1, Auto t2) {
+                int ComparisonResult = t1.getMileage() - t2.getMileage();
+                return 0 == ComparisonResult ? t1.getDop_parameters() - t2.getDop_parameters() : ComparisonResult;
             }
         });
-// Цикл по массиву Auto
+// Рачет расхода топлива по классу авто
+        calcCarConsumption();
+
+            System.out.printf("Общая стоимость расходов на ГСМ = %f\n", AllConsumption);
+            System.out.println();
+            System.out.printf("тип авто имеющий наибольшую стоимость расходов - " + MaxCarCode + " = %f\n", MaxCarConsumtion);
+            System.out.printf("тип авто имеющий наименьшую стоимость расходов - " + MinCarCode + " = %f\n", MinCarConsumtion);
+            System.out.println();
+
+    }
+
+    private static void calcCarConsumption() {
+        String ClassAuto ="";
+        // Цикл по массиву Auto
         for (Auto A:autoArray) {
             ClassAuto = A.TypeAuto(A.getCode_car());
             System.out.println("Тип авто = " + ClassAuto);
@@ -62,11 +67,11 @@ public class Main {
                 String S = A.TypeParameter(A.getCode_car());
                 System.out.printf(S + " = %d\n", A.getDop_parameters());
             }
-    //  расчет расхода топлива
+            //  расчет расхода топлива
             CarConsumtion = A.CarConsumption();
             System.out.printf("Расход авто = %f\n", CarConsumtion);
             System.out.println();
-    // Вычисление минимального/ максимального расхода топлива
+            // Вычисление минимального/ максимального расхода топлива
             if (A.equals(autoArray[0])) {
                 MinCarConsumtion = CarConsumtion;
                 MinCarCode = ClassAuto;
@@ -83,12 +88,21 @@ public class Main {
             // Расчет общих расходов на ГСМ
             AllConsumption += CarConsumtion;
         }
-            System.out.printf("Общая стоимость расходов на ГСМ = %f\n", AllConsumption);
-            System.out.println();
-            System.out.printf("тип авто имеющий наибольшую стоимость расходов - " + MaxCarCode + " = %f\n", MaxCarConsumtion);
-            System.out.printf("тип авто имеющий наименьшую стоимость расходов - " + MinCarCode + " = %f\n", MinCarConsumtion);
-            System.out.println();
+    }
 
+    private static void initializeAuto(String[] auto) {
+        int i = 0;
+        for (String a:auto) {
+            String[] CarCode = a.replaceAll("_","-").split("C")[1].split("-");
+            int cod_car = Integer.parseInt(CarCode[0]);
+            int number_car = Integer.parseInt(CarCode[1]);
+            int mileage = Integer.parseInt(CarCode[2]);
+            int dop_parameters = 0;
+            if (CarCode.length == 4)
+                dop_parameters = Integer.parseInt(CarCode[3]);
+            autoArray[i] = new Auto(cod_car,number_car,mileage,dop_parameters);
+            i++;
+        }
     }
 
     // Метод выполения задачи 2

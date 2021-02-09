@@ -8,19 +8,11 @@ public class Auto {
 
     }
 // Конструктор для инициализации объекта Auto
-    public Auto(String a) {
-        String[] CarCode = a.split("C")[1].split("_");
-        String cod_car = CarCode[0];
-        String number_car = CarCode[1].split("-")[0];
-        String mileage = CarCode[1].split("-")[1];
-        String dop_parameters = "";
-        if (CarCode[1].split("-").length == 3)
-            dop_parameters = CarCode[1].split("-")[2];
-        this.code_car = Integer.parseInt(cod_car);
-        this.number_car = Integer.parseInt(number_car);
-        this.mileage = Integer.parseInt(mileage);
-        if (dop_parameters != "")
-            this.dop_parameters = Integer.parseInt(dop_parameters);
+    public Auto(int cod_car, int number_car, int mileage, int dop_parameters) {
+        this.code_car = cod_car;
+        this.number_car = number_car;
+        this.mileage = mileage;
+        this.dop_parameters = dop_parameters;
     }
 // Метод расчета расхода топлива
     public  float CarConsumption(){
