@@ -10,7 +10,11 @@ public class Main {
     public static float CarConsumtion = 0;
     public static String MaxCarCode = "";
     public static String MinCarCode = "";
-    public static Auto[] autoArray;
+    public static ArrayList<Auto> autoArray;
+    public static ArrayList<Sedan> SedanArray;
+    public static ArrayList<Truck> TruckArray;
+    public static ArrayList<Passenger_Transport> Passenger_TransportArray;
+    public static ArrayList<Heavy_Vehicles> Heavy_VehiclesArray;
 
     public static void main(String[] args) {
         System.out.println("Это мой проект JAVA - Задание №1 ");
@@ -29,21 +33,25 @@ public class Main {
     }
     }
 
+
 // Главный метод по запуску всего проекта по задаче 1
     private static void RunGSMclass(String[] auto) {
 // Создание массива Auto
-        autoArray = new Auto[auto.length];
-// Инициализация массива Auto
-        initializeAuto(auto);
+        autoArray = new ArrayList<>();
+// Инициализация массивов SedanArray, TruckArray, Passenger_TransportArray, Heavy_VehiclesArray
+        initializeSedan(auto);
+        initializeTruck(auto);
+        initializePassenger_Transport(auto);
+        initializeHeavy_Vehicles(auto);
+// Копирование массивов объектов Sedan, Truck, Passenger_Transport, Heavy_Vehicles в autoArray
+        autoArray.addAll(SedanArray);
+        autoArray.addAll(TruckArray);
+        autoArray.addAll(Passenger_TransportArray);
+        autoArray.addAll(Heavy_VehiclesArray);
 
-// Сортировка массива объектов Auto
-        Arrays.sort(autoArray, new Comparator<Auto>() {
-            @Override
-            public int compare(Auto t1, Auto t2) {
-                int ComparisonResult = t1.getMileage() - t2.getMileage();
-                return 0 == ComparisonResult ? t1.getDop_parameters() - t2.getDop_parameters() : ComparisonResult;
-            }
-        });
+// Сортировка массива объектов
+       autoArray.sort(Comparator.comparing(Auto::getMileage).thenComparing(Auto::getDop_parameters));
+
 // Рачет расхода топлива по классу авто
         calcCarConsumption();
 
@@ -55,24 +63,92 @@ public class Main {
 
     }
 
+    private static void initializeSedan(String[] auto) {
+        SedanArray = new ArrayList<>();
+        for (String a:auto) {
+            String[] CarCode = a.replaceAll("_", "-").split("C")[1].split("-");
+            if (CarCode[0].matches("100") ) {
+                int cod_car = Integer.parseInt(CarCode[0]);
+                int number_car = Integer.parseInt(CarCode[1]);
+                int mileage = Integer.parseInt(CarCode[2]);
+                SedanArray.add(new Sedan.Builder(cod_car, number_car, mileage).build());
+            }
+        }
+    }
+
+    private static void initializeTruck(String[] auto) {
+        TruckArray = new ArrayList<>();
+        for (String a:auto) {
+            String[] CarCode = a.replaceAll("_", "-").split("C")[1].split("-");
+            if (CarCode[0].matches("200") ) {
+                int cod_car = Integer.parseInt(CarCode[0]);
+                int number_car = Integer.parseInt(CarCode[1]);
+                int mileage = Integer.parseInt(CarCode[2]);
+                int dop_parameters = Integer.parseInt(CarCode[3]);
+                TruckArray.add(new Truck.Builder(cod_car, number_car, mileage).dop_parameters(dop_parameters).build());
+            }
+        }
+    }
+
+    private static void initializePassenger_Transport(String[] auto) {
+        Passenger_TransportArray = new ArrayList<>();
+        for (String a:auto) {
+            String[] CarCode = a.replaceAll("_", "-").split("C")[1].split("-");
+            if (CarCode[0].matches("300") ) {
+                int cod_car = Integer.parseInt(CarCode[0]);
+                int number_car = Integer.parseInt(CarCode[1]);
+                int mileage = Integer.parseInt(CarCode[2]);
+                int dop_parameters = Integer.parseInt(CarCode[3]);
+                Passenger_TransportArray.add(new Passenger_Transport.Builder(cod_car, number_car, mileage).dop_parameters(dop_parameters).build());
+            }
+        }
+    }
+
+    private static void initializeHeavy_Vehicles(String[] auto) {
+         Heavy_VehiclesArray= new ArrayList<>();
+        for (String a:auto) {
+            String[] CarCode = a.replaceAll("_", "-").split("C")[1].split("-");
+            if (CarCode[0].matches("400") ) {
+                int cod_car = Integer.parseInt(CarCode[0]);
+                int number_car = Integer.parseInt(CarCode[1]);
+                int mileage = Integer.parseInt(CarCode[2]);
+                int dop_parameters = Integer.parseInt(CarCode[3]);
+                Heavy_VehiclesArray.add(new Heavy_Vehicles.Builder(cod_car, number_car, mileage).dop_parameters(dop_parameters).build());
+            }
+        }
+    }
+
     private static void calcCarConsumption() {
         String ClassAuto ="";
         // Цикл по массиву Auto
         for (Auto A:autoArray) {
-            ClassAuto = A.TypeAuto(A.getCode_car());
+            //ClassAuto = A.TypeAuto(A.getCode_car());
+            if (A.getClass() == Sedan.class)
+                ClassAuto = ((Sedan) A).getTypeAuto();
+            else if (A.getClass() == Truck.class)
+                ClassAuto = ((Truck) A).getTypeAuto();
+            else if (A.getClass() == Passenger_Transport.class)
+                ClassAuto = ((Passenger_Transport) A).getTypeAuto();
+            else
+                ClassAuto = ((Heavy_Vehicles) A).getTypeAuto();
+
             System.out.println("Тип авто = " + ClassAuto);
             System.out.printf("Номер авто = %d\n", A.getNumber_car());
             System.out.printf("Пробег авто = %d\n", A.getMileage());
-            if (A.getDop_parameters() != 0){
-                String S = A.TypeParameter(A.getCode_car());
-                System.out.printf(S + " = %d\n", A.getDop_parameters());
-            }
+
+            if (A.getClass() == Truck.class)
+                System.out.printf(((Truck) A).getTypeParameter() + " = %d\n", A.getDop_parameters());
+            else if (A.getClass() == Passenger_Transport.class)
+                System.out.printf(((Passenger_Transport) A).getTypeParameter() + " = %d\n", A.getDop_parameters());
+            else if (A.getClass() == Heavy_Vehicles.class)
+                System.out.printf(((Heavy_Vehicles) A).getTypeParameter() + " = %d\n", A.getDop_parameters());
+
             //  расчет расхода топлива
             CarConsumtion = A.CarConsumption();
             System.out.printf("Расход авто = %f\n", CarConsumtion);
             System.out.println();
             // Вычисление минимального/ максимального расхода топлива
-            if (A.equals(autoArray[0])) {
+            if ( A.equals(autoArray.get(0))) {
                 MinCarConsumtion = CarConsumtion;
                 MinCarCode = ClassAuto;
             }
@@ -90,22 +166,7 @@ public class Main {
         }
     }
 
-    private static void initializeAuto(String[] auto) {
-        int i = 0;
-        for (String a:auto) {
-            String[] CarCode = a.replaceAll("_","-").split("C")[1].split("-");
-            int cod_car = Integer.parseInt(CarCode[0]);
-            int number_car = Integer.parseInt(CarCode[1]);
-            int mileage = Integer.parseInt(CarCode[2]);
-            int dop_parameters = 0;
-            if (CarCode.length == 4)
-                dop_parameters = Integer.parseInt(CarCode[3]);
-            autoArray[i] = new Auto(cod_car,number_car,mileage,dop_parameters);
-            i++;
-        }
-    }
-
-    // Метод выполения задачи 2
+// Метод выполения задачи 2
     public static void RunTaskTwo(Integer[] myArray) {
         // инициализация целочисленного массива
         MyClass NewClass = new MyClass(myArray);
