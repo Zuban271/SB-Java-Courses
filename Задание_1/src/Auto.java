@@ -40,15 +40,15 @@ public class Auto {
     }
 
 // Метод расчета расхода топлива
-    public  float CarConsumption(){
+  /*  public  float CarConsumption(){
             float FuelCost = whatFuelCost(this.getCode_car());
             float FuelRate = whatFuelRate(this.getCode_car());
             // Расчет расходов на класс авто
         float CarConsumtion = (float) this.getMileage() / 100 * FuelRate * FuelCost;
             return CarConsumtion;
-        }
+        }*/
 // Метод определения типа авто по коду класса
-        public  String TypeAuto(int t) {
+        /*public  String TypeAuto(int t) {
             switch (t) {
                 case 100:
                     return "Легковая";
@@ -62,9 +62,9 @@ public class Auto {
                     return "Неверный код транспортного средства - " + t;
 
             }
-        }
+        }*/
 // Метод определения типа дополнительного параметра по коду класса
-    public  String TypeParameter(int t) {
+    /*public  String TypeParameter(int t) {
         switch (t) {
             case 200:
                 return "объем перевезенного груза Грузовой машины";
@@ -76,9 +76,9 @@ public class Auto {
                 return "Неверный код транспортного средства - " + t;
 
         }
-    }
+    }*/
 // Метод определения стоимости топлива
-    private  float whatFuelCost(int t) {
+    /*private  float whatFuelCost(int t) {
         switch (t) {
             case 100:
                 return (float) 46.10;
@@ -92,10 +92,10 @@ public class Auto {
                 return 0;
 
         }
-    }
+    }*/
 
 // Метод определения расхода топлива
-    public  float whatFuelRate(int t) {
+    /*public  float whatFuelRate(int t) {
         switch (t) {
             case 100:
                 return (float) 12.5;
@@ -109,7 +109,7 @@ public class Auto {
                 return 0;
 
         }
-    }
+    }*/
 
 // Геттеры  класса
     public int getCode_car() {

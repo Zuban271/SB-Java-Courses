@@ -144,7 +144,15 @@ public class Main {
                 System.out.printf(((Heavy_Vehicles) A).getTypeParameter() + " = %d\n", A.getDop_parameters());
 
             //  расчет расхода топлива
-            CarConsumtion = A.CarConsumption();
+            if (A.getClass() == Sedan.class)
+                CarConsumtion = ((Sedan) A).CarConsumption();
+            else if (A.getClass() == Truck.class)
+                CarConsumtion = ((Truck) A).CarConsumption();
+            else if (A.getClass() == Passenger_Transport.class)
+                CarConsumtion = ((Passenger_Transport) A).CarConsumption();
+            else
+                CarConsumtion = ((Heavy_Vehicles) A).CarConsumption();
+
             System.out.printf("Расход авто = %f\n", CarConsumtion);
             System.out.println();
             // Вычисление минимального/ максимального расхода топлива
