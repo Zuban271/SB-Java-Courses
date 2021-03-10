@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 // Задание 5 Необходимо написать функцию, которая на вход получает массив строк, в формате имя_игрока количество_очков.
 //	Необходимо вывести победителя данной игры.
@@ -34,32 +33,40 @@ public class Main {
                 String name = gam[0];
                 GamerArray.add(new Gamer(name, score, false));
         }
-        ArrayList<Gamer> GameWinner = new ArrayList<>();
+
+        Map<String, List<Integer>> GameWinner = new HashMap<>();
 
         for (Gamer g: GamerArray) {
             int gscore = 0;
             Gamer prevgamer = new Gamer(g.getName(),g.getScore(),g.getIs_winnner());
+            List<Integer> Scorers = new ArrayList<>();
             for (Gamer w: GamerArray) {
                 if ((w.getName().equals(g.getName())) & !w.getIs_winnner()) {
-                    gscore += w.getScore();
+                    Scorers.add(w.getScore());
                     w.setIs_winnner(true);
                 }
             }
-             prevgamer.setScore(gscore);
+             //prevgamer.setScore(gscore);
             if(!prevgamer.getIs_winnner())
-                GameWinner.add(prevgamer);
-
-
+                GameWinner.put(prevgamer.getName(),Scorers);
         }
-        String nameWinner = "";
-        int scoreWinner = GameWinner.get(0).getScore();
-        for (Gamer g: GameWinner) {
-            if(scoreWinner < g.getScore()) {
-                scoreWinner = g.getScore();
-                nameWinner = g.getName();
+        String nameWinner = GamerArray.get(0).getName();
+        int scoreWinner = GameWinner.get(nameWinner).get(0);
+        int i = 0;
+        int length = GameWinner.get(nameWinner).size();
+        while (i < length) {
+            for (Map.Entry<String, List<Integer>> e : GameWinner.entrySet()) {
+                String name = e.getKey();
+                List<Integer> score = e.getValue();
+                if (scoreWinner < score.get(i)) {
+                    scoreWinner = score.get(i);
+                    nameWinner = name;
+
+                }
             }
+            i++;
         }
-        //System.out.println(nameWinner + " =  " + scoreWinner);
+        System.out.println(nameWinner + " =  " + scoreWinner);
         return nameWinner;
     }
 

@@ -1,4 +1,3 @@
-// Класс Игрок
 public class Gamer {
     private String name;
     private Integer score;
