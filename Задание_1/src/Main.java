@@ -1,9 +1,11 @@
 import javax.xml.transform.Source;
 //import java.util.Arrays;
+import java.io.*;
 import java.util.*;
 
-// Проект Зубань Алексея, Задание № 1
+// Проект Зубань Алексея, Задание № 1 GSM
 public class Main {
+    //Задача 1
     public static float AllConsumption = 0;
     public static float MaxCarConsumtion = 0;
     public static float MinCarConsumtion = 0;
@@ -15,27 +17,56 @@ public class Main {
     public static ArrayList<Truck> TruckArray;
     public static ArrayList<Passenger_Transport> Passenger_TransportArray;
     public static ArrayList<Heavy_Vehicles> Heavy_VehiclesArray;
+    public static ArrayList<Driver> Drivers;
 
-    public static void main(String[] args) {
-        System.out.println("Это мой проект JAVA - Задание №1 ");
-        System.out.println("Введите число 1 для запуска 1 задания или 2 для запуска 2 задания:");
-        Scanner scanner = new Scanner(System.in);
-        int digit = scanner.nextInt();
-    if (digit == 1) {
-//Задача 1
-    String[] Automobile = {"C100_1-100", "C200_1-120-1200", "C300_1-120-30", "C400_1-80-20", "C100_2-50", "C200_2-40-1000", "C300_2-200-45", "C400_2-10-20", "C100_3-10", "C200_3-170-1100", "C300_3-150-29", "C400_3-100-28", "C100_1-300", "C200_1-100-750", "C300_1-32-15"};
-    RunGSMclass(Automobile);
-        }
-    else {
-//Задача 2
-    Integer[] testArray = {10, 20, 30, 40, 13, 24, 56, 22, 12, 44, 55, 34, 78, 45, 676, 89, 11, 23, 43, 50, 39, 19, 678, 15, 41};
-    RunTaskTwo(testArray);
+    public static void main(String[] args) throws IOException {
+        //PrintStream out = new PrintStream(new BufferedOutputStream(new FileOutputStream("result_gsm.txt")));
+        //System.setOut(out);
+        //System.setErr(out);
+
+        System.out.println("Это мой проект JAVA - Задание №1 ГСМ ");
+        System.out.println("Введите список водителей, в формате: имя, тип авто(легковая - л, грузовая - г, пассажирский транспорт - п, тяжелая техника - т), номер авто, где:");
+
+       /* for (String l:driverlist) {
+            System.out.println(l);
+        }*/
+
+
+//Чтение строки их файла automobile.txt
+ try(BufferedReader bufferedReader = new BufferedReader(new FileReader("automobile.txt"))) {
+     String bufferString = "";
+     ArrayList<String> automobiles = new ArrayList<>();
+     //System.out.println("Массив автомобилей");
+     while ((bufferString = bufferedReader.readLine()) != null) {
+         String[] auto = bufferString.split(",");
+         Collections.addAll(automobiles, auto);
+         //System.out.println(bufferString);
+     }
+     RunGSMclass(automobiles.toArray(String[]::new));
+     //out.close();
+  }
+ catch (IOException e) {
+     e.printStackTrace();
+      }
+
+  }
+
+private static  ArrayList<String> ReadDrivers() throws IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader((System.in)));
+    String s ="";
+    ArrayList<String> driverlist = new ArrayList<>();
+    while (!s.equals("quit")){
+        s =reader.readLine();
+        if (!s.equals("quit"))
+            driverlist.add(s);
     }
-    }
-
-
+    return driverlist;
+}
 // Главный метод по запуску всего проекта по задаче 1
-    private static void RunGSMclass(String[] auto) {
+    private static void RunGSMclass(String[] auto) throws IOException {
+// Создание массива Drivers
+        Drivers = new ArrayList<>();
+
 // Создание массива Auto
         autoArray = new ArrayList<>();
 // Инициализация массивов SedanArray, TruckArray, Passenger_TransportArray, Heavy_VehiclesArray
@@ -49,6 +80,56 @@ public class Main {
         autoArray.addAll(Passenger_TransportArray);
         autoArray.addAll(Heavy_VehiclesArray);
 
+        System.out.print("Номера легковых машин: ");
+        for (Sedan s:SedanArray) {
+            System.out.print(s.getNumber_car());
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.print("Номера грузовых машин: ");
+        for (Truck t:TruckArray) {
+            System.out.print(t.getNumber_car());
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.print("Номера пассажирского транспорта: ");
+        for (Passenger_Transport p:Passenger_TransportArray) {
+            System.out.print(p.getNumber_car());
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.print("Номера тяжелой техники: ");
+        for (Heavy_Vehicles h:Heavy_VehiclesArray) {
+            System.out.print(h.getNumber_car());
+            System.out.print(" ");
+        }
+        System.out.println();
+        System.out.println("Для выхода наберите: quit");
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        ArrayList<String> driverlist = ReadDrivers();
+        for (String d:driverlist) {
+            String[] str = d.split(",");
+            int car_cod = 0;
+            switch (str[1]){
+                case "л":
+                    car_cod = 100;
+                    break;
+                case "г":
+                    car_cod = 200;
+                    break;
+                case "п":
+                    car_cod = 300;
+                    break;
+                case "т":
+                    car_cod = 400;
+                    break;
+                default:
+                    car_cod = -1;
+                    break;
+            }
+            Drivers.add(new Driver(str[0],5,car_cod,Integer.parseInt(str[2])));
+        }
 // Сортировка массива объектов
        autoArray.sort(Comparator.comparing(Auto::getMileage).thenComparing(Auto::getDop_parameters));
 
@@ -135,6 +216,13 @@ public class Main {
             System.out.println("Тип авто = " + ClassAuto);
             System.out.printf("Номер авто = %d\n", A.getNumber_car());
             System.out.printf("Пробег авто = %d\n", A.getMileage());
+            for (Driver d:Drivers){
+                if((d.getCode_car() == A.getCode_car()) & (d.getNumber_car() == A.getNumber_car())) {
+                    System.out.println("Водитель авто = " + d.getName());
+                    d.setSalary(d.getTariff() * A.getMileage());
+                    System.out.printf("Водитель заработал = %f\n", d.getSalary());
+                }
+            }
 
             if (A.getClass() == Truck.class)
                 System.out.printf(((Truck) A).getTypeParameter() + " = %d\n", A.getDop_parameters());
@@ -172,59 +260,6 @@ public class Main {
             // Расчет общих расходов на ГСМ
             AllConsumption += CarConsumtion;
         }
-    }
-
-// Метод выполения задачи 2
-    public static void RunTaskTwo(Integer[] myArray) {
-        // инициализация целочисленного массива
-        MyClass NewClass = new MyClass(myArray);
-        NewClass.printArray();
-        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
-        System.out.println();
-        // добавление элемента 888 в конец массива
-        NewClass.setNumbersEnd(888);
-        NewClass.printArray();
-        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
-        System.out.println();
-        // добавление элемента 777 в массив, на позицию 10
-        NewClass.setNumbersPos(777,10);
-        NewClass.printArray();
-        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
-        // удаление элемента массива по индексу 15
-        NewClass.delNumbersPos(15);
-        System.out.println();
-        NewClass.printArray();
-        System.out.printf("Длина массива = %d\n",NewClass.ArrayLength());
-        System.out.println();
-        // изменения значения по его индексу в конце массива на значение 999
-        NewClass.changeNumbersPos(999,NewClass.ArrayLength() - 1);
-        NewClass.printArray();
-        System.out.println();
-        Integer[] myNewArray;
-        // сортировка массива по возрастанию (без изменения исходного массива)
-        myNewArray = NewClass.sortNumbersIncrease();
-        for (Integer n:myNewArray)
-            System.out.printf("Элемент нового массива = %d\n",n.intValue());
-
-        System.out.println();
-        // сортировка массива по убыванию (без изменения исходного массива)
-        myNewArray = NewClass.sortNumbersDecrease();
-        for (Integer n:myNewArray)
-            System.out.printf("Элемент нового массива = %d\n",n.intValue());
-
-        System.out.println();
-        // вывод максимального элемента
-        int max = NewClass.maxORminNumber(true);
-        System.out.printf("Максимальный элемент массива = %d\n",max);
-        // вывод минимального элемента
-        System.out.println();
-        int min = NewClass.maxORminNumber(false);
-        System.out.printf("Минимальный элемент массива = %d\n",min);
-
-        System.out.println();
-        // заполнения массива одинаковыми элементами: 7777
-        NewClass.setEqualElement(7777);
-        NewClass.printArray();
     }
 
 }

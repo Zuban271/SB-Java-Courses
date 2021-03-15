@@ -36,4 +36,5 @@ public class Sedan extends Auto {
     public String getTypeAuto() {
         return TypeAuto;
     }
+
 }
